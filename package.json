@@ -1,6 +1,6 @@
 {
   "name": "@hicaru/ripemd160.js",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A pure javascript implementation of ripemd160 hash function.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -8,6 +8,7 @@
   "author": "Rinat <lich666black@gmail.com>",
   "license": "MIT",
   "types": "dist/index.d.ts",
+  "module": "dist/index.js",
   "files": [
     "dist/*",
     "lib/*",
@@ -15,6 +16,16 @@
     "index.js",
     "index.ts"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "browser": {
+    "crypto": false
+  },
   "private": false,
   "keywords": [
     "string",

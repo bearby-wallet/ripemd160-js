@@ -12,9 +12,10 @@ export default {
     dir: 'dist',
 		name: 'ripemd',
     sourcemap: true,
-		format: 'cjs',
+		format: 'umd',
 		exports: 'named',
-		sourcemap: true
+		sourcemap: true,
+		preferConst: true
   },
   plugins: [
     resolve({
