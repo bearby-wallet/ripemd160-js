@@ -1,3 +1,6 @@
+import { join32, rotl32, split32, sum32, sum32By3, sum32By4, toArray } from './utils';
+
+
 const r = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
   7, 4, 13, 1, 10, 6, 15, 3, 12, 0, 9, 5, 2, 14, 11, 8,
@@ -71,27 +74,143 @@ function f(j: number, x: number, y: number, z: number) {
 
 
 export class Ripemd160 {
+  #pending?: number[];
+
   #blockSize = 512;
-  #outSize = 160;
-  #hmacStrength = 192;
-  #padLength = 64;
-  #pending = null;
+  #padLength = 8;
   #pendingTotal = 0;
 
   #delta8 = this.#blockSize / 8;
   #delta32 = this.#blockSize / 32;
 
-  #h = [ 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0 ];
+  #h = [
+    0x67452301,
+    0xefcdab89,
+    0x98badcfe,
+    0x10325476,
+    0xc3d2e1f0
+  ];
 
-  constructor() {}
+  get blockSize() {
+    return this.#blockSize;
+  }
 
-  digest() {}
+  digest() {
+    this.update(this.#pad());
 
-  update() {}
+    if (this.#pending === null) {
+      throw new Error('pending cannot be null');
+    }
 
-  #update(msg: Uint8Array, start: number) {}
+    return this.#digest();
+  }
 
-  #digest() {}
+  update(msg: Uint8Array | number[]) {
+    msg = toArray(msg);
 
-  #pad() {}
+    if (!this.#pending) {
+      this.#pending = msg;
+    } else {
+      this.#pending = this.#pending.concat(msg);
+    }
+
+    this.#pendingTotal += msg.length;
+
+    if (this.#pending.length >= this.#delta8) {
+      msg = this.#pending;
+  
+      const r = msg.length % this.#delta8;
+
+      this.#pending = msg.slice(msg.length - r, msg.length);
+
+      if (this.#pending.length === 0) {
+        this.#pending = undefined;
+      }
+  
+      msg = join32(msg, 0, msg.length - r);
+
+      for (let i = 0; i < msg.length; i += this.#delta32) {
+        this.#update(Array.from(msg), i);
+      }
+    }
+
+    return this;
+  }
+
+  #update(msg: number[], start: number) {
+    let A = this.#h[0];
+    let B = this.#h[1];
+    let C = this.#h[2];
+    let D = this.#h[3];
+    let E = this.#h[4];
+    let Ah = A;
+    let Bh = B;
+    let Ch = C;
+    let Dh = D;
+    let Eh = E;
+
+    for (let j = 0; j < 80; j++) {
+      var T = sum32(
+        rotl32(
+          sum32By4(A, f(j, B, C, D), msg[r[j] + start], K(j)),
+          s[j]),
+        E);
+      A = E;
+      E = D;
+      D = rotl32(C, 10);
+      C = B;
+      B = T;
+      T = sum32(
+        rotl32(
+          sum32By4(Ah, f(79 - j, Bh, Ch, Dh), msg[rh[j] + start], Kh(j)),
+          sh[j]),
+        Eh);
+      Ah = Eh;
+      Eh = Dh;
+      Dh = rotl32(Ch, 10);
+      Ch = Bh;
+      Bh = T;
+    }
+    T = sum32By3(this.#h[1], C, Dh);
+    this.#h[1] = sum32By3(this.#h[2], D, Eh);
+    this.#h[2] = sum32By3(this.#h[3], E, Ah);
+    this.#h[3] = sum32By3(this.#h[4], A, Bh);
+    this.#h[4] = sum32By3(this.#h[0], B, Ch);
+    this.#h[0] = T;
+  }
+
+  #digest() {
+    return split32(this.#h);
+  }
+
+  #pad(): number[] {
+    let len = this.#pendingTotal;
+    const bytes = this.#delta8;
+    const k = bytes - ((len + this.#padLength) % bytes);
+    let res = new Array(k + this.#padLength);
+
+    res[0] = 0x80;
+
+    for (var i = 1; i < k; i++) {
+      res[i] = 0;
+    }
+
+    // Append length
+    len <<= 3;
+
+    res[i++] = len & 0xff;
+    res[i++] = (len >>> 8) & 0xff;
+    res[i++] = (len >>> 16) & 0xff;
+    res[i++] = (len >>> 24) & 0xff;
+    res[i++] = 0;
+    res[i++] = 0;
+    res[i++] = 0;
+    res[i++] = 0;
+
+    for (let t = 8; t < this.#padLength; t++) {
+      res[i++] = 0;
+    }
+
+    return res;
+  }
 }
