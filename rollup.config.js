@@ -10,9 +10,11 @@ export default {
   input: 'index.ts',
   output: {
     dir: 'dist',
-    format: 'umd',
 		name: 'ripemd',
-    sourcemap: true
+    sourcemap: true,
+		format: 'cjs',
+		exports: 'named',
+		sourcemap: true
   },
   plugins: [
     resolve({
@@ -23,6 +25,7 @@ export default {
 		}),
     typescript({
 			sourceMap: true,
+			declaration: true,
 			inlineSources: true
 		}),
     production && terser({

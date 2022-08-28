@@ -1,12 +1,25 @@
 {
   "name": "@hicaru/ripemd160.js",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "A pure javascript implementation of ripemd160 hash function.",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "repository": "git@github.com:bearby-wallet/ripemd160-js.git",
   "author": "Rinat <lich666black@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist/index.js"
+  ],
   "private": false,
+  "keywords": [
+    "string",
+    "strings",
+    "ripemd160",
+    "ripe160",
+    "bitcoin",
+    "bytes",
+    "cryptography"
+  ],
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.4.0",
