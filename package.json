@@ -1,6 +1,6 @@
 {
   "name": "@hicaru/ripemd160.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A pure javascript implementation of ripemd160 hash function.",
   "main": "index.ts",
   "repository": "git@github.com:bearby-wallet/ripemd160-js.git",
