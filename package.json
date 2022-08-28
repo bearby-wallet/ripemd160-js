@@ -1,5 +1,5 @@
 {
-  "name": "ripemd160.js",
+  "name": "@hicaru/ripemd160.js",
   "version": "0.0.1",
   "description": "A pure javascript implementation of ripemd160 hash function.",
   "main": "index.ts",
