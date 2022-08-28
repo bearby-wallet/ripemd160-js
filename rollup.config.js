@@ -32,7 +32,7 @@ export default {
 			format: {
 				comments: false
 			},
-			compress: true
+			compress: false
 		})
   ],
 };
