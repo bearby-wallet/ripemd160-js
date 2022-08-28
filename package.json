@@ -1,14 +1,17 @@
 {
   "name": "@hicaru/ripemd160.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A pure javascript implementation of ripemd160 hash function.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "repository": "git@github.com:bearby-wallet/ripemd160-js.git",
   "author": "Rinat <lich666black@gmail.com>",
   "license": "MIT",
+  "types": "./dist/index.d.ts",
   "files": [
-    "dist/index.js"
+    "dist/*",
+    "lib/*",
+    "tests/*"
   ],
   "private": false,
   "keywords": [
@@ -33,7 +36,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run test && rollup -c",
     "dev": "rollup -c -w",
     "test": "jest"
   },
