@@ -1,6 +1,6 @@
 {
   "name": "@hicaru/ripemd160.js",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A pure javascript implementation of ripemd160 hash function.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
